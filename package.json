@@ -1,0 +1,29 @@
+{
+  "name": "spiderbuy",
+  "version": "1.0.0",
+  "description": "one spider about Sea Amoy",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oyosc/spider-worthBuy.git"
+  },
+  "keywords": [
+    "boring"
+  ],
+  "author": "xx",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oyosc/spider-worthBuy/issues"
+  },
+  "homepage": "https://github.com/oyosc/spider-worthBuy#readme",
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "express": "^4.14.0",
+    "jade": "^1.11.0",
+    "pm2": "^2.0.19",
+    "request": "^2.76.0"
+  }
+}
