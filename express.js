@@ -3,9 +3,15 @@
  */
 var express = require('express');
 var app = express();
+var spider = require('./service/spider');
+var bodyParser = require('body-parser');
 
-var request = require('request');
-var cheerio = require('cheerio');
+
+app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.urlencoded({
+    limit: '5mb',
+    extended: true
+}))
 
 app.listen('3000', function(){
     console.log('hello world');
@@ -15,38 +21,42 @@ app.set('view engine', 'jade');
 app.set('views', './views');
 
 
-app.get('/', function(req, res){
-    request('http://haitao.smzdm.com/', function(err, res1){
-        if(err){
-            console.log(err);
-        }
-        else if(res1.statusCode == 200){
-            var result = res1.body.toString();
-            var $ = cheerio.load(result,{decodeEntities: false});
-            var result = null;
-            var category = null,
-                shop = null,
-                article_tag = {},
-                articleName = null,
-                articleHref = null,
-                articleDesc = null,
-                article_unvotedwrap = null,
-                article_imgurl = null,
-                article_createTime = null,
-                article_votedwrap = null;
-            $('.feed-row-wide').each(function(idx, element){
-                var $element = $(element);
-                articleName = $element.find('.feed-block-title ').text().trim() + $element.find('.z-highlight').text().trim();
-                article_imgurl = $element.find('.z-feed-img').find('img').attr('src');
-                articleHref = $element.find('.z-feed-img').children('a').attr('href');
-                category =
-            });
-            if(result != null){
-                res.render('index', {message: result});
-            }
-            else{
-                res.render('index', {message: 'GG'});
-            }
-        }
-    });
+app.post('/spiderData', function(req, res){
+    var params = req.body;
+    var requestUrl = params.url;
+    var category;
+    switch(requestUrl){
+        case 'http://haitao.smzdm.com/xuan/s0f163t0p1/':
+            category = "电脑数码";
+            break;
+        case 'http://haitao.smzdm.com/xuan/s0f57t0p1/' :
+            category = "服饰鞋包";
+            break;
+        case 'http://haitao.smzdm.com/xuan/s0f191t0p1/' :
+            category = "运动户外";
+            break;
+        case 'http://haitao.smzdm.com/xuan/s0f131t0p1/':
+            category = "礼品钟表";
+            break;
+        case 'http://haitao.smzdm.com/xuan/s0f113t0p1/' :
+            category = "个护化妆";
+            break;
+        case 'http://haitao.smzdm.com/xuan/s0f27t0p1/':
+            category = "家用电器";
+            break;
+        case 'http://haitao.smzdm.com/xuan/s0f1515t0p1/' :
+            category = "日用百货";
+            break;
+        case 'http://haitao.smzdm.com/xuan/s0f37t0p1/' :
+            category = "家居家装";
+            break;
+        case 'http://haitao.smzdm.com/xuan/s0f7t0p1/':
+            category = "图书音像";
+            break;
+    }
+    spider(requestUrl, category, function(err, result){
+        res.render('index', {message: result})
+    })
 })
+
+module.exports = app;
