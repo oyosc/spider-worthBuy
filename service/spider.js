@@ -3,7 +3,7 @@
  */
 var request = require('request');
 var cheerio = require('cheerio');
-var prepare = require('../mysql_init/init');
+var mysql = require('../mysql_init/init');
 
 var spider = function(url, category, callback){
     request(url, function(err, res1){
@@ -44,7 +44,7 @@ var spider = function(url, category, callback){
                     article_publishTime = month + '-' + nowTime.getDate() + ' ' + article_publishTime;
                 }
             });
-            console.log(prepare());
+            console.log(mysql.init(0,true));
             return callback(null, articleDesc);
         }
     });

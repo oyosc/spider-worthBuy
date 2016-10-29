@@ -32,8 +32,7 @@ module.exports = function(config){
     if(config.type != "read"){
         sequelize.sync({force: false});
     }
-    db.sequelize = sequelize;
-    db.Sequelize = Sequelize
+    
     console.log("mysql init success");
     return db;
 }
