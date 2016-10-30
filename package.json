@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/oyosc/spider-worthBuy#readme",
   "dependencies": {
+    "async": "^2.1.2",
     "body-parser": "^1.15.2",
     "cheerio": "^0.22.0",
     "express": "^4.14.0",

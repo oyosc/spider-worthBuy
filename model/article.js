@@ -22,7 +22,7 @@ module.exports = function(sequelize){
                 comment : "商城"
             },
             article_tag : {
-                type : Sequelize.STRING,
+                type : Sequelize.TEXT,
                 allowNull : false,
                 comment : "标签"
             },

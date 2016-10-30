@@ -55,7 +55,7 @@ app.post('/spiderData', function(req, res){
             break;
     }
     spider(requestUrl, category, function(err, result){
-        res.render('index', {message: result})
+        res.json(result)
     })
 })
 
