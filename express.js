@@ -59,4 +59,58 @@ app.post('/spiderData', function(req, res){
     })
 })
 
+app.get('getArticleInfo', function(req, res){
+    var params = req.body;
+    var category = params.category;
+    var requestUrl;
+    switch(category){
+        case '电脑数码':
+            requestUrl = "http://haitao.smzdm.com/xuan/s0f163t0p1/";
+            break;
+        case '服饰鞋包' :
+            requestUrl = "http://haitao.smzdm.com/xuan/s0f57t0p1/";
+            break;
+        case '运动户外' :
+            requestUrl = "http://haitao.smzdm.com/xuan/s0f191t0p1/";
+            break;
+        case '礼品钟表':
+            requestUrl = "http://haitao.smzdm.com/xuan/s0f131t0p1/";
+            break;
+        case '个护化妆' :
+            requestUrl = "http://haitao.smzdm.com/xuan/s0f113t0p1/";
+            break;
+        case 'http://haitao.smzdm.com/xuan/s0f27t0p1/':
+            requestUrl = "家用电器";
+            break;
+        case '日用百货' :
+            requestUrl = "http://haitao.smzdm.com/xuan/s0f1515t0p1/";
+            break;
+        case '家居家装' :
+            requestUrl = "http://haitao.smzdm.com/xuan/s0f37t0p1/";
+            break;
+        case '图书音像':
+            requestUrl = "http://haitao.smzdm.com/xuan/s0f7t0p1/";
+            break;
+    }
+    spider.getArticleInfo(req, function(err, result){
+        if(err){
+            return callback(err, null);
+        }
+        if(result.status = 'notRecord'){
+            spider(requestUrl, category, function(err1, result1){
+                if(err1){
+                    return callback(err1, null);
+                }
+                else{
+                    res.json(result1);
+                }
+            })
+        }
+        if(result){
+            res.json(result);
+        }
+    })
+    
+})
+
 module.exports = app;

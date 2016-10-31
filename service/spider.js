@@ -14,7 +14,6 @@ var spider = function(url, category, callback){
         else if(res1.statusCode == 200){
             var result = res1.body.toString();
             var $ = cheerio.load(result,{decodeEntities: false});
-            var result = null;
             var i = 0;
             async.whilst(
                 function(){
@@ -109,4 +108,36 @@ var spider = function(url, category, callback){
     });
 }
 
-exports = module.exports = spider
+var getArticleInfo = function(req, callback){
+    var params = req.body;
+    var articleName = params.name;
+    var category = params.category;
+    var time = params.publichTime;
+    sequelize('article').findAll({
+            where : {
+                time : time,
+                name: {"$like": "%"+articleName+"%"}
+            },
+            include: [
+                {
+                    model: sequelize('category'),
+                    where: {name: category},
+                    required: false
+                }
+            ]
+        }
+    ).then(function(result){
+        if(result && result.length>0){
+            if(result.category && result.category.length>0){
+                return callback(null, result)
+            }
+        }
+        else{
+            return callback(null, {status: 'notRecord'});
+        }
+    })
+    
+}
+
+exports = module.exports = spider;
+exports.getArticleInfo = getArticleInfo;
