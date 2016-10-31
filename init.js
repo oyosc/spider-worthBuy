@@ -19,7 +19,8 @@ var config = {
     queue: true,
     maxConcurrentQueries: 150,
     modelPath: (require('path')).join(__dirname, 'model'),
-    isAuto: true //是否开启自动爬取
+    isAuto: true, //是否开启自动爬取
+    climbingTime: "xxx"//暂时未开启
 }
 
 var mysql = require('./mysql_init/init');

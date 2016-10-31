@@ -5,7 +5,10 @@ var autoSpider = require('../service/autoSpider');
 var autoClimbing = function(isAuto){
     var nowTime = new Date();
     var hours = nowTime.getHours();
-    if(hours === 8){
+    var minutes = nowTime.getMinutes();
+    var seconds = nowTime.getSeconds();
+    var time = hours + '-' + minutes + '-'+ seconds;
+    if(hours === '8-0-0'){
         autoSpider(isAuto, function(err, result){
             if(err){
                 console.log('----------------Error------------------');
@@ -24,5 +27,4 @@ var autoClimbing = function(isAuto){
         })
     }
 }
-
 exports = module.exports = autoClimbing;
