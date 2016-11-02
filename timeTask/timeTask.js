@@ -1,6 +1,7 @@
 /**
  * Created by Administrator on 2016/11/2.
  */
+//只支持linux平台，后面会按照另一种思路来进行解决
 const exec = require('child_process').exec;
 function timeTask(params, callback){
     var startTime = ['*','*','*','*','*'];
