@@ -3,6 +3,8 @@
  */
 //只支持linux平台，后面会按照另一种思路来进行解决
 const exec = require('child_process').exec;
+var dateParse = require('./dateParse');
+
 function timeTask(params, callback){
     var startTime = ['*','*','*','*','*'];
     var cronThing;
@@ -49,6 +51,12 @@ function Task(task, name, fireDate){
 
 var taskArray = [];
 
+function judgeEqual(arg1, arg2){
+    if(typeof arg1 === 'number' && typeof arg2 ==='number'){
+        return arg1 === arg2;
+    }
+    console.log('bad typeof date');
+}
 
 // function runAgainTask(task, fireDate){
 //
@@ -60,43 +68,54 @@ function timerTask(){
     var callback = name? arguments[2]:arguments[1];
     if(typeof date === 'object'){
         var now = new Date();
-        console.log(now.getMonth());
         var year = date.year?date.year:now.getFullYear();
         var month = date.month?date.month:now.getMonth();
         var day = date.day?date.day: now.getDate();
-        var hours = date.hours?date.hours: now.getHours()+1;
+        var hours = date.hours?date.hours: now.getHours();
         var minutes = date.minutes?date.minutes: now.getMinutes();
         var seconds = date.seconds?date.seconds: now.getSeconds();
         var dateTime = new dateFunction(year,month,day,hours,minutes,seconds);
+        console.log(month);
+        console.log(dateTime.month);
+        var nowDate = new Date();
         if(dateTime.year<now.getFullYear()){
             return callback(null, {status: 'notCorrectYear'});
         }
-        var fireDate = new Date();
-        fireDate.setFullYear(dateTime.year);
-        fireDate.setMonth(dateTime.month);
-        fireDate.setDate(dateTime.day);
-        fireDate.setHours(7);
-        fireDate.setHours(8);
-        fireDate.setHours(9);
-        fireDate.setMinutes(0);
-        fireDate.setSeconds(0);
+        var fireDate = new dateParse(nowDate.getTime());
         console.log(fireDate);
-        // var task = new Task(callback, name, fireDate);
-        // taskArray.push(task);
-        // if(taskArray.length>1){
-        //     taskArray.sort(function(a, b){
-        //         return a.fireDate.getTime() - b.fireDate.getTime();
-        //     })
-        // }
-        
-        
-        
-        
-        
+        while(true){
+            // if(!judgeEqual(dateTime.year, fireDate.getFullYear())){
+            //     fireDate.addYear();
+            //     continue;
+            // }
+            // if(!judgeEqual(dateTime.month, fireDate.getMonth())){
+            //     fireDate.addMonth();
+            //     continue;
+            // }
+            if(!judgeEqual(dateTime.day, fireDate.getDate())){
+                fireDate.addDay();
+                continue;
+            }
+            if(!judgeEqual(dateTime.hour, fireDate.getHours())){
+                fireDate.addHours();
+                continue;
+            }
+            // if(!judgeEqual(dateTime.minute, fireDate.getMinutes())){
+            //     fireDate.addMinutes();
+            //     continue;
+            // }
+            // if(!judgeEqual(dateTime.second, fireDate.getSeconds())){
+            //     fireDate.addSeconds();
+            //     continue;
+            // }
+            break;
+        }
+        console.log(fireDate);
         
     }else{
         console.log('bad date type');
     }
 }
 timerTask({hours: 8})
+
 exports = module.exports = timeTask;
