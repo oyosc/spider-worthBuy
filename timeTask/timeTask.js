@@ -66,6 +66,48 @@ function judgeEqual(arg1, arg2){
 //
 // }
 
+function nextTime(dateTime){
+    var nowDate = new Date();
+    var fireDate = new dateParse(nowDate.getTime());
+    while(true){
+        if(dateTime.year!=null && dateTime.year < fireDate.getFullYear()){
+            fireDate = null;
+            break
+        }
+        if(dateTime.year != null &&!judgeEqual(dateTime.year, fireDate.getFullYear())){
+            fireDate.addYear();
+            fireDate.setMonth(0);
+            fireDate.setDate(1);
+            fireDate.setHours(0);
+            fireDate.setMinutes(0);
+            fireDate.setSeconds(0);
+            continue;
+        }
+        if(dateTime.year != null &&!judgeEqual(dateTime.month, fireDate.getMonth())){
+            fireDate.addMonth();
+            continue;
+        }
+        if(dateTime.day != null &&!judgeEqual(dateTime.day, fireDate.getDate())){
+            fireDate.addDay();
+            continue;
+        }
+        if(dateTime.hour != null &&!judgeEqual(dateTime.hour, fireDate.getHours())){
+            fireDate.addHours();
+            continue;
+        }
+        if(dateTime.minute != null &&!judgeEqual(dateTime.minute, fireDate.getMinutes())){
+            fireDate.addMinutes();
+            continue;
+        }
+        if(dateTime.second != null &&!judgeEqual(dateTime.second, fireDate.getSeconds())){
+            fireDate.addSeconds();
+            continue;
+        }
+        break;
+    }
+    return fireDate;
+}
+
 function timerTask(){
     var name = (arguments.length==3 && typeof arguments[0] === 'string')? arguments[0]:null;
     var date = name? arguments[1]:arguments[0];
@@ -79,41 +121,9 @@ function timerTask(){
         var minutes = date.minutes?date.minutes: null;
         var seconds = date.seconds?date.seconds: null;
         var dateTime = new dateFunction(year,month,day,hours,minutes,seconds);
-        var nowDate = new Date();
-        var fireDate = new dateParse(nowDate.getTime());
-        while(true){
-            if(!judgeEqual(dateTime.year, fireDate.getFullYear())){
-                fireDate.addYear();
-                fireDate.setMonth(0);
-                fireDate.setDate(1);
-                fireDate.setHours(0);
-                fireDate.setMinutes(0);
-                fireDate.setSeconds(0);
-                continue;
-            }
-            if(!judgeEqual(dateTime.month, fireDate.getMonth())){
-                fireDate.addMonth();
-                continue;
-            }
-            if(!judgeEqual(dateTime.day, fireDate.getDate())){
-                fireDate.addDay();
-                continue;
-            }
-            if(!judgeEqual(dateTime.hour, fireDate.getHours())){
-                fireDate.addHours();
-                continue;
-            }
-            if(!judgeEqual(dateTime.minute, fireDate.getMinutes())){
-                fireDate.addMinutes();
-                continue;
-            }
-            if(!judgeEqual(dateTime.second, fireDate.getSeconds())){
-                fireDate.addSeconds();
-                continue;
-            }
-            break;
-        }
-        console.log(fireDate);
+        var taskTime = nextTime(dateTime)
+        
+        console.log(taskTime);
         
     }else{
         console.log('bad date type');
