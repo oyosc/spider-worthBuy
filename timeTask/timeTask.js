@@ -2,6 +2,7 @@
  * Created by Administrator on 2016/11/2.
  */
 //只支持linux平台，后面会按照另一种思路来进行解决
+'use strict';
 const exec = require('child_process').exec;
 var dateParse = require('./dateParse');
 
@@ -52,6 +53,9 @@ function Task(task, name, fireDate){
 var taskArray = [];
 
 function judgeEqual(arg1, arg2){
+    if(arg1 === null){
+        return true;
+    }
     if(typeof arg1 === 'number' && typeof arg2 ==='number'){
         return arg1 === arg2;
     }
@@ -68,30 +72,29 @@ function timerTask(){
     var callback = name? arguments[2]:arguments[1];
     if(typeof date === 'object'){
         var now = new Date();
-        var year = date.year?date.year:now.getFullYear();
-        var month = date.month?date.month:now.getMonth();
-        var day = date.day?date.day: now.getDate();
-        var hours = date.hours?date.hours: now.getHours();
-        var minutes = date.minutes?date.minutes: now.getMinutes();
-        var seconds = date.seconds?date.seconds: now.getSeconds();
+        var year = date.year?date.year:null;
+        var month = date.month?date.month:null;
+        var day = date.day?date.day: null;
+        var hours = date.hours?date.hours: null;
+        var minutes = date.minutes?date.minutes: null;
+        var seconds = date.seconds?date.seconds: null;
         var dateTime = new dateFunction(year,month,day,hours,minutes,seconds);
-        console.log(month);
-        console.log(dateTime.month);
         var nowDate = new Date();
-        if(dateTime.year<now.getFullYear()){
-            return callback(null, {status: 'notCorrectYear'});
-        }
         var fireDate = new dateParse(nowDate.getTime());
-        console.log(fireDate);
         while(true){
-            // if(!judgeEqual(dateTime.year, fireDate.getFullYear())){
-            //     fireDate.addYear();
-            //     continue;
-            // }
-            // if(!judgeEqual(dateTime.month, fireDate.getMonth())){
-            //     fireDate.addMonth();
-            //     continue;
-            // }
+            if(!judgeEqual(dateTime.year, fireDate.getFullYear())){
+                fireDate.addYear();
+                fireDate.setMonth(0);
+                fireDate.setDate(1);
+                fireDate.setHours(0);
+                fireDate.setMinutes(0);
+                fireDate.setSeconds(0);
+                continue;
+            }
+            if(!judgeEqual(dateTime.month, fireDate.getMonth())){
+                fireDate.addMonth();
+                continue;
+            }
             if(!judgeEqual(dateTime.day, fireDate.getDate())){
                 fireDate.addDay();
                 continue;
@@ -100,14 +103,14 @@ function timerTask(){
                 fireDate.addHours();
                 continue;
             }
-            // if(!judgeEqual(dateTime.minute, fireDate.getMinutes())){
-            //     fireDate.addMinutes();
-            //     continue;
-            // }
-            // if(!judgeEqual(dateTime.second, fireDate.getSeconds())){
-            //     fireDate.addSeconds();
-            //     continue;
-            // }
+            if(!judgeEqual(dateTime.minute, fireDate.getMinutes())){
+                fireDate.addMinutes();
+                continue;
+            }
+            if(!judgeEqual(dateTime.second, fireDate.getSeconds())){
+                fireDate.addSeconds();
+                continue;
+            }
             break;
         }
         console.log(fireDate);

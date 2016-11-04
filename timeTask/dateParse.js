@@ -4,6 +4,7 @@
 var dateFunction = {
     addYear: function addYear(){
         this.setFullYear(this.getFullYear()+1);
+        console.log(this.getFullYear());
     },
     addMonth: function addMonth(){
         this.setDate(1);
