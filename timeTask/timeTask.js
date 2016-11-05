@@ -137,9 +137,9 @@ function timerTask(){
         var year = date.year?date.year:null;
         var month = date.month?date.month:null;
         var day = date.day?date.day: null;
-        var hours = date.hours?date.hours: null;
-        var minutes = date.minutes?date.minutes: null;
-        var seconds = date.seconds?date.seconds: null;
+        var hours = date.hour?date.hour: null;
+        var minutes = date.minute?date.minute: null;
+        var seconds = date.second?date.second: null;
         var dateTime = new dateFunction(year,month,day,hours,minutes,seconds);
         var taskTime = nextTime(dateTime);
         var task = new Task(callback, name, taskTime, null);
@@ -166,7 +166,7 @@ function timerTask(){
         console.log('bad date type');
     }
 }
-timerTask({seconds: 50}, function(){
+timerTask({hour:10,second: 50}, function(){
     console.log('231231');
 })
 
