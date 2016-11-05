@@ -36,6 +36,8 @@ function timeTask(params, callback){
     });
 }
 
+
+//采用另一种思路的定时任务
 function dateFunction(year, month, day, hours, minutes, seconds){
     this.year = year;
     this.month = month;
@@ -141,12 +143,31 @@ function timerTask(){
         var dateTime = new dateFunction(year,month,day,hours,minutes,seconds);
         var taskTime = nextTime(dateTime);
         var task = new Task(callback, name, taskTime, null);
-        task.timerId = timeOut(callback, taskTime);
-        
+        taskArray.push(task);
+        if(taskArray.length>1){
+            taskArray.sort(function(a, b){
+                return a.fireDate.getTime() - b.fireDate.getTime();
+            });
+        }
+        var currentArray = taskArray[0];
+        currentArray.timerId = timeOut(function(){
+            if(currentArray.task){
+                currentArray.task();
+            }
+            currentArray = new Task(callback, name, nextTime(dateTime), null);
+            taskArray.push(currentArray);
+            taskArray.sort(function(a, b){
+                return a.fireDate.getTime() - b.fireDate.getTime();
+            });
+            timerTask(date, currentArray.task)
+        }, currentArray.fireDate.getTime()-now.getTime());
+        return currentArray.timerId;
     }else{
         console.log('bad date type');
     }
 }
-timerTask({hours: 8})
+timerTask({seconds: 50}, function(){
+    console.log('231231');
+})
 
 exports = module.exports = timeTask;
