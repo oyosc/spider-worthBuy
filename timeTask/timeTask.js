@@ -166,8 +166,6 @@ function timerTask(){
         console.log('bad date type');
     }
 }
-timerTask({hour:10,second: 50}, function(){
-    console.log('231231');
-})
 
-exports = module.exports = timeTask;
+exports = timeTask;
+exports = module.exports = timerTask;

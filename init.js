@@ -3,6 +3,7 @@
  */
 var express = require('./express');
 var autoClimbing = require('./automatic/AutoClimbing');
+var timeTask = require('./timeTask/timeTask');
 var config = {
     database: 'spider',              //MYSQL数据库名
     username: "root",                   //MYSQL数据库用户
@@ -25,5 +26,5 @@ var config = {
 
 var mysql = require('./mysql_init/init');
 mysql.init(config);
-autoClimbing(config.isAuto);
+timeTask({hour:10, minute: 30});
 express;
