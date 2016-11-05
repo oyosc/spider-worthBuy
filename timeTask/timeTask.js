@@ -5,6 +5,7 @@
 'use strict';
 const exec = require('child_process').exec;
 var dateParse = require('./dateParse');
+var TIMEOUT_MAX = 2147483647; // 2^31-1
 
 function timeTask(params, callback){
     var startTime = ['*','*','*','*','*'];
@@ -44,10 +45,11 @@ function dateFunction(year, month, day, hours, minutes, seconds){
     this.second = seconds;
 }
 
-function Task(task, name, fireDate){
+function Task(task, name, fireDate, timerId){
     this.name = name;
     this.task = task;
-    this.fireDate = fireDate
+    this.fireDate = fireDate;
+    this.timerId = timerId
 }
 
 var taskArray = [];
@@ -108,6 +110,22 @@ function nextTime(dateTime){
     return fireDate;
 }
 
+function timeOut(callback, time){
+    var timerId;
+    if(time < TIMEOUT_MAX){
+        timerId = setTimeout(callback, time);
+        return timerId;
+    }
+    else{
+        timerId = setTimeout(function(){
+            time -= TIMEOUT_MAX;
+            timeOut(callback, time);
+        }, TIMEOUT_MAX)
+        return timerId;
+    }
+}
+
+
 function timerTask(){
     var name = (arguments.length==3 && typeof arguments[0] === 'string')? arguments[0]:null;
     var date = name? arguments[1]:arguments[0];
@@ -121,9 +139,9 @@ function timerTask(){
         var minutes = date.minutes?date.minutes: null;
         var seconds = date.seconds?date.seconds: null;
         var dateTime = new dateFunction(year,month,day,hours,minutes,seconds);
-        var taskTime = nextTime(dateTime)
-        
-        console.log(taskTime);
+        var taskTime = nextTime(dateTime);
+        var task = new Task(callback, name, taskTime, null);
+        task.timerId = timeOut(callback, taskTime);
         
     }else{
         console.log('bad date type');
