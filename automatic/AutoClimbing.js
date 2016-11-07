@@ -6,7 +6,7 @@ var autoSpider = require('../service/autoSpider');
 
 
 function autoClimbing(isAuto){
-    schedule.scheduleJob({hour: 10, minute: 00}, function(){
+    schedule.scheduleJob({minute: 55}, function(){
         autoSpider(isAuto, function(err, result){
             if(err){
                 console.log('----------------Error------------------');

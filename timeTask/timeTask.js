@@ -54,6 +54,7 @@ function Task(task, name, fireDate, timerId){
     this.timerId = timerId
 }
 
+
 var taskArray = [];
 
 function judgeEqual(arg1, arg2){
@@ -70,15 +71,16 @@ function judgeEqual(arg1, arg2){
 //
 // }
 
-function nextTime(dateTime){
+dateFunction.prototype.nextTime = function(dateTime){
     var nowDate = new Date();
-    var fireDate = new dateParse(nowDate.getTime());
+    var fireDate = (dateTime instanceof Date)? new dateParse(dateTime.getTime()): new dateParse(nowDate.getTime());
+    fireDate.addSeconds();
     while(true){
-        if(dateTime.year!=null && dateTime.year < fireDate.getFullYear()){
+        if(dateTime.year!=null && dateTime.year < nowDate.getFullYear()){
             fireDate = null;
             break
         }
-        if(dateTime.year != null &&!judgeEqual(dateTime.year, fireDate.getFullYear())){
+        if(dateTime.year != null &&!judgeEqual(this.year, fireDate.getFullYear())){
             fireDate.addYear();
             fireDate.setMonth(0);
             fireDate.setDate(1);
@@ -87,23 +89,23 @@ function nextTime(dateTime){
             fireDate.setSeconds(0);
             continue;
         }
-        if(dateTime.year != null &&!judgeEqual(dateTime.month, fireDate.getMonth())){
+        if(dateTime.month != null &&!judgeEqual(this.month, fireDate.getMonth())){
             fireDate.addMonth();
             continue;
         }
-        if(dateTime.day != null &&!judgeEqual(dateTime.day, fireDate.getDate())){
+        if(dateTime.day != null &&!judgeEqual(this.day, fireDate.getDate())){
             fireDate.addDay();
             continue;
         }
-        if(dateTime.hour != null &&!judgeEqual(dateTime.hour, fireDate.getHours())){
+        if(dateTime.hour != null &&!judgeEqual(this.hour, fireDate.getHours())){
             fireDate.addHours();
             continue;
         }
-        if(dateTime.minute != null &&!judgeEqual(dateTime.minute, fireDate.getMinutes())){
+        if(dateTime.minute != null &&!judgeEqual(this.minute, fireDate.getMinutes())){
             fireDate.addMinutes();
             continue;
         }
-        if(dateTime.second != null &&!judgeEqual(dateTime.second, fireDate.getSeconds())){
+        if(dateTime.second != null &&!judgeEqual(this.second, fireDate.getSeconds())){
             fireDate.addSeconds();
             continue;
         }
@@ -129,9 +131,10 @@ function timeOut(callback, time){
 
 
 function timerTask(){
-    var name = (arguments.length==3 && typeof arguments[0] === 'string')? arguments[0]:null;
+    var name = (arguments.length==4 && typeof arguments[0] === 'string')? arguments[0]:null;
     var date = name? arguments[1]:arguments[0];
     var callback = name? arguments[2]:arguments[1];
+    var nextTime = name? arguments[3]:arguments[2];
     if(typeof date === 'object'){
         var now = new Date();
         var year = date.year?date.year:null;
@@ -139,9 +142,13 @@ function timerTask(){
         var day = date.day?date.day: null;
         var hours = date.hour?date.hour: null;
         var minutes = date.minute?date.minute: null;
-        var seconds = date.second?date.second: null;
+        var seconds = date.second?date.second: 0;
         var dateTime = new dateFunction(year,month,day,hours,minutes,seconds);//15s
-        var taskTime = nextTime(dateTime);
+        if(nextTime){
+            var taskTime = dateTime.nextTime(nextTime);
+        }else{
+            var taskTime = dateTime.nextTime(dateTime);
+        }
         var task = new Task(callback, name, taskTime, null);
         taskArray.push(task);
         if(taskArray.length>1){
@@ -150,13 +157,12 @@ function timerTask(){
             });
         }
         var currentArray = taskArray[0];
-        currentArray.fireDate.addSeconds();
         currentArray.timerId = timeOut(function(){
             if(currentArray.task){
                 currentArray.task();
             }
             var cb = currentArray.task;
-            delete taskArray[0];
+            taskArray.shift();
             timerTask(date, cb)
         }, currentArray.fireDate.getTime()-now.getTime());
         return currentArray.timerId;
