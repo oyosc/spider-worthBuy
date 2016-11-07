@@ -26,5 +26,5 @@ var config = {
 
 var mysql = require('./mysql_init/init');
 mysql.init(config);
-timeTask({hour:10, minute: 30});
+timeTask({hours: 10});
 express;

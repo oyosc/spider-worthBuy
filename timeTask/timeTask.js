@@ -140,7 +140,7 @@ function timerTask(){
         var hours = date.hour?date.hour: null;
         var minutes = date.minute?date.minute: null;
         var seconds = date.second?date.second: null;
-        var dateTime = new dateFunction(year,month,day,hours,minutes,seconds);
+        var dateTime = new dateFunction(year,month,day,hours,minutes,seconds);//15s
         var taskTime = nextTime(dateTime);
         var task = new Task(callback, name, taskTime, null);
         taskArray.push(task);
@@ -150,16 +150,14 @@ function timerTask(){
             });
         }
         var currentArray = taskArray[0];
+        currentArray.fireDate.addSeconds();
         currentArray.timerId = timeOut(function(){
             if(currentArray.task){
                 currentArray.task();
             }
-            currentArray = new Task(callback, name, nextTime(dateTime), null);
-            taskArray.push(currentArray);
-            taskArray.sort(function(a, b){
-                return a.fireDate.getTime() - b.fireDate.getTime();
-            });
-            timerTask(date, currentArray.task)
+            var cb = currentArray.task;
+            delete taskArray[0];
+            timerTask(date, cb)
         }, currentArray.fireDate.getTime()-now.getTime());
         return currentArray.timerId;
     }else{
