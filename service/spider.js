@@ -7,105 +7,144 @@ var sequelize = require('../mysql_init/init');
 var async = require('async');
 
 var spider = function(url, category, callback){
-    request(url, function(err, res1){
+    function requestUrl(limitUrl){
+        var url = limitUrl;
+        return function(cb){
+            request(url, function(err, res1){
+                if(err){
+                    console.log(err);
+                }
+                else if(res1.statusCode == 200){
+                    var result = res1.body.toString();
+                    var $ = cheerio.load(result,{decodeEntities: false});
+                    var i = 0;
+                    async.whilst(
+                        function(){
+                            return i < $('.feed-row-wide').length;
+                        },
+                        function(callback1){
+                            i++;
+                            var shop = null,
+                                article_tag = [],
+                                tag = {},
+                                articleName = null,
+                                articleHref = null,
+                                articleDesc = null,
+                                article_unvotedwrap = null,
+                                article_imgurl = null,
+                                article_publishTime = null,
+                                article_votedwrap = null;
+                            var $element = $($('.feed-row-wide')[i]);
+                            articleName = $element.find('.feed-block-title ').text().trim() + $element.find('.z-highlight').text().trim();
+                            article_imgurl = $element.find('.z-feed-img').find('img').attr('src');
+                            articleHref = $element.find('.z-feed-img').children('a').attr('href');
+                            if(!articleHref){
+                                return callback1(null, 'null');
+                            }
+                            var timeAndShop = $element.find('.feed-block-extras').text().trim();
+                            var elementTag = $element.find('.feed-block-info').children('span').last().children('a');
+                            elementTag.each(function(idx1, tag){
+                                article_tag.push($(tag).text().trim());
+                            });
+                            tag = {article_tag: article_tag};
+                            shop = timeAndShop.match(/\D+$/);
+                            article_publishTime = timeAndShop.substr(0, shop.index);
+                            articleDesc = $element.find('.feed-block-descripe').text().trim();
+                            article_unvotedwrap = $element.find('.feed-btn-group').find('.z-icon-zhi').next().text().trim();
+                            article_votedwrap = $element.find('.feed-btn-group').find('.z-icon-buzhi').next().text().trim();
+                            var nowTime = new Date();
+                            if(article_publishTime.indexOf('-') < 0){
+                                var month = nowTime.getMonth()+1;
+                                article_publishTime = month + '-' + nowTime.getDate() + ' ' + article_publishTime;
+                            }
+                            sequelize('article').findAll({
+                                where: {name: articleName}
+                            }).then(function(result){
+                                console.log(result.length);
+                                if(result && result.length != 0){
+                                    return callback1(null, {status: 'isExistd'});
+                                }
+                                else{
+                                    console.log('11');
+                                    return sequelize('category').findOne({
+                                        where: {name: category}
+                                    }).then(function(cateResult){
+                                        
+                                        var now = new Date();
+                                        var month = now.getMonth() + 1;
+                                        var time = now.getFullYear()+ '-'+month + '-' + now.getDate();
+                                        if(cateResult && cateResult != null){
+                                            sequelize('article').create({
+                                                name: articleName,
+                                                shop: shop[0],
+                                                article_tag: JSON.stringify(tag),
+                                                articleHref: articleHref,
+                                                articleDesc: articleDesc,
+                                                article_unvotedwrap: article_unvotedwrap,
+                                                article_votedwrap: article_votedwrap,
+                                                article_imgurl: article_imgurl,
+                                                article_publishTime: article_publishTime,
+                                                category_id: cateResult._id,
+                                                create_time: time
+                                        
+                                            }).then(function(createResult){
+                                                if(createResult && createResult!==null){
+                                                    return callback1(null, createResult);
+                                                }
+                                                else{
+                                                    return callback1(null, {status: 'createFailed'});
+                                                }
+                                            });
+                                    
+                                        }
+                                        else{
+                                            return callback1(null, {status: 'noCategory'});
+                                        }
+                                    });
+                                }
+                            }).catch(function(err){
+                                if(err){
+                                    return callback1(err, null);
+                                }
+                            });
+                        },
+                        function(err, result){
+                            return callback(err, result);
+                        }
+                    );
+                }
+            });
+        }
+    }
+    request(url, function(err, bodyResult){
         if(err){
             console.log(err);
         }
-        else if(res1.statusCode == 200){
-            var result = res1.body.toString();
-            var $ = cheerio.load(result,{decodeEntities: false});
-            var i = 0;
-            async.whilst(
-                function(){
-                    return i < $('.feed-row-wide').length;
-                },
-                function(callback1){
-                    i++;
-                    var shop = null,
-                        article_tag = [],
-                        tag = {},
-                        articleName = null,
-                        articleHref = null,
-                        articleDesc = null,
-                        article_unvotedwrap = null,
-                        article_imgurl = null,
-                        article_publishTime = null,
-                        article_votedwrap = null;
-                    var $element = $($('.feed-row-wide')[i]);
-                    articleName = $element.find('.feed-block-title ').text().trim() + $element.find('.z-highlight').text().trim();
-                    article_imgurl = $element.find('.z-feed-img').find('img').attr('src');
-                    articleHref = $element.find('.z-feed-img').children('a').attr('href');
-                    var timeAndShop = $element.find('.feed-block-extras').text().trim();
-                    var elementTag = $element.find('.feed-block-info').children('span').last().children('a');
-                    elementTag.each(function(idx1, tag){
-                        article_tag.push($(tag).text().trim());
-                    });
-                    tag = {article_tag: article_tag};
-                    shop = timeAndShop.match(/\D+$/);
-                    article_publishTime = timeAndShop.substr(0, shop.index);
-                    articleDesc = $element.find('.feed-block-descripe').text().trim();
-                    article_unvotedwrap = $element.find('.feed-btn-group').find('.z-icon-zhi').next().text().trim();
-                    article_votedwrap = $element.find('.feed-btn-group').find('.z-icon-buzhi').next().text().trim();
-                    var nowTime = new Date();
-                    if(article_publishTime.indexOf('-') < 0){
-                        var month = nowTime.getMonth()+1;
-                        article_publishTime = month + '-' + nowTime.getDate() + ' ' + article_publishTime;
-                    }
-                    sequelize('article').findAll({
-                        where: {name: articleName}
-                    }).then(function(result){
-                        if(result && result.length != 0){
-                            return callback1(null, {status: 'isExistd'});
-                        }
-                        else{
-                            return sequelize('category').findOne({
-                                where: {name: category}
-                                }).then(function(cateResult){
-
-                                    var now = new Date();
-                                    var month = now.getMonth() + 1;
-                                    var time = now.getFullYear()+ '-'+month + '-' + now.getDate();
-                                    if(cateResult && cateResult != null){
-                                        sequelize('article').create({
-                                            name: articleName,
-                                            shop: shop[0],
-                                            article_tag: JSON.stringify(tag),
-                                            articleHref: articleHref,
-                                            articleDesc: articleDesc,
-                                            article_unvotedwrap: article_unvotedwrap,
-                                            article_votedwrap: article_votedwrap,
-                                            article_imgurl: article_imgurl,
-                                            article_publishTime: article_publishTime,
-                                            category_id: cateResult._id,
-                                            create_time: time
-
-                                        }).then(function(createResult){
-                                            if(createResult && createResult!==null){
-                                                return callback1(null, createResult);
-                                            }
-                                            else{
-                                                return callback1(null, {status: 'createFailed'});
-                                            }
-                                        });
-
-                                    }
-                                    else{
-                                        return callback1(null, {status: 'noCategory'});
-                                    }
-                                });
-                            }
-                        }).catch(function(err){
-                            if(err){
-                                return callback1(err, null);
-                            }
-                        });
-                },
-                function(err, result){
-                    return callback(err, result);
+        else if(bodyResult.statusCode == 200){
+            var allResult = bodyResult.body.toString();
+            var $ = cheerio.load(allResult,{decodeEntities: false});
+            var $element1 = $('.pagenation-list');
+            var taskArray = [];
+            var $li = $element1.children('li');
+            for(var i =0; i< $li.length; i++){
+                var $url = $($li[i]);
+                var url = $url.children('a').attr('href');
+                if(!url){
+                    break;
                 }
-            );
+                taskArray.push(requestUrl(url));
+            }
+            async.series(taskArray, function(err, results){
+                if(err){
+                    return callback(err, null);
+                }
+                if(results){
+                    return callback(null, results);
+                }
+            })
+            
         }
-    });
+    })
 }
 
 var getArticleInfo = function(req, callback){

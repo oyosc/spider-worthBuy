@@ -11,7 +11,7 @@ gulp.task('init', function(cb){
 
 gulp.task("re_start", function(cb){
     nodemon({
-        script: './init.js',
+        script: './initStart.js',
         ext: 'js json'
     });
     nodemon.on('start', function(){

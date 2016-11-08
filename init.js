@@ -24,8 +24,12 @@ var config = {
     climbingTime: "xxx"//暂时未开启
 }
 
-var mysql = require('./mysql_init/init');
-mysql.init(config);
-timeTask({minute: 13});
-// autoClimbing(config.isAuto);
-express;
+var init = function(){
+    var mysql = require('./mysql_init/init');
+    mysql.init(config);
+    timeTask({minute: 13});
+    // autoClimbing(config.isAuto);
+    express;
+}
+
+exports = module.exports = init;
