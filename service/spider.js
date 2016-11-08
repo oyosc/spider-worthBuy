@@ -60,12 +60,10 @@ var spider = function(url, category, callback){
                             sequelize('article').findAll({
                                 where: {name: articleName}
                             }).then(function(result){
-                                console.log(result.length);
                                 if(result && result.length != 0){
                                     return callback1(null, {status: 'isExistd'});
                                 }
                                 else{
-                                    console.log('11');
                                     return sequelize('category').findOne({
                                         where: {name: category}
                                     }).then(function(cateResult){
@@ -109,7 +107,10 @@ var spider = function(url, category, callback){
                             });
                         },
                         function(err, result){
-                            return callback(err, result);
+                            if(err){
+                                return callback(err, null);
+                            }
+                            return callback(null, result);
                         }
                     );
                 }
