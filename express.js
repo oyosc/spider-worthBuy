@@ -20,78 +20,100 @@ app.listen('3000', function(){
 app.set('view engine', 'jade');
 app.set('views', './views');
 
+function judge(url, category){
+    if(url){
+        var category;
+        switch(url){
+            case 'http://haitao.smzdm.com/xuan/s0f163t0p1/':
+                category = "电脑数码";
+                break;
+            case 'http://haitao.smzdm.com/xuan/s0f57t0p1/' :
+                category = "服饰鞋包";
+                break;
+            case 'http://haitao.smzdm.com/xuan/s0f191t0p1/' :
+                category = "运动户外";
+                break;
+            case 'http://haitao.smzdm.com/xuan/s0f131t0p1/':
+                category = "礼品钟表";
+                break;
+            case 'http://haitao.smzdm.com/xuan/s0f113t0p1/' :
+                category = "个护化妆";
+                break;
+            case 'http://haitao.smzdm.com/xuan/s0f27t0p1/':
+                category = "家用电器";
+                break;
+            case 'http://haitao.smzdm.com/xuan/s0f1515t0p1/' :
+                category = "日用百货";
+                break;
+            case 'http://haitao.smzdm.com/xuan/s0f37t0p1/' :
+                category = "家居家装";
+                break;
+            case 'http://haitao.smzdm.com/xuan/s0f7t0p1/':
+                category = "图书音像";
+                break;
+            default:
+                category = "isNull"
+        }
+        return category;
+    }
+    if(category){
+        var requestUrl;
+        switch(category){
+            case '电脑数码':
+                requestUrl = "http://haitao.smzdm.com/xuan/s0f163t0p1/";
+                break;
+            case '服饰鞋包' :
+                requestUrl = "http://haitao.smzdm.com/xuan/s0f57t0p1/";
+                break;
+            case '运动户外' :
+                requestUrl = "http://haitao.smzdm.com/xuan/s0f191t0p1/";
+                break;
+            case '礼品钟表':
+                requestUrl = "http://haitao.smzdm.com/xuan/s0f131t0p1/";
+                break;
+            case '个护化妆' :
+                requestUrl = "http://haitao.smzdm.com/xuan/s0f113t0p1/";
+                break;
+            case 'http://haitao.smzdm.com/xuan/s0f27t0p1/':
+                requestUrl = "家用电器";
+                break;
+            case '日用百货' :
+                requestUrl = "http://haitao.smzdm.com/xuan/s0f1515t0p1/";
+                break;
+            case '家居家装' :
+                requestUrl = "http://haitao.smzdm.com/xuan/s0f37t0p1/";
+                break;
+            case '图书音像':
+                requestUrl = "http://haitao.smzdm.com/xuan/s0f7t0p1/";
+                break;
+            default:
+                requestUrl = "isNull";
+        }
+        return requestUrl;
+    }
+    
+}
 
 app.post('/spiderData', function(req, res){
     var params = req.body;
     var requestUrl = params.url;
     var category;
-    switch(requestUrl){
-        case 'http://haitao.smzdm.com/xuan/s0f163t0p1/':
-            category = "电脑数码";
-            break;
-        case 'http://haitao.smzdm.com/xuan/s0f57t0p1/' :
-            category = "服饰鞋包";
-            break;
-        case 'http://haitao.smzdm.com/xuan/s0f191t0p1/' :
-            category = "运动户外";
-            break;
-        case 'http://haitao.smzdm.com/xuan/s0f131t0p1/':
-            category = "礼品钟表";
-            break;
-        case 'http://haitao.smzdm.com/xuan/s0f113t0p1/' :
-            category = "个护化妆";
-            break;
-        case 'http://haitao.smzdm.com/xuan/s0f27t0p1/':
-            category = "家用电器";
-            break;
-        case 'http://haitao.smzdm.com/xuan/s0f1515t0p1/' :
-            category = "日用百货";
-            break;
-        case 'http://haitao.smzdm.com/xuan/s0f37t0p1/' :
-            category = "家居家装";
-            break;
-        case 'http://haitao.smzdm.com/xuan/s0f7t0p1/':
-            category = "图书音像";
-            break;
+    category = judge(requestUrl, null);
+    if(category === "isNull"){
+        res.json('the category is not exist');
     }
-    spider(requestUrl, category, function(err, result){
-        res.json(result)
-    })
+    else{
+        spider(requestUrl, category, function(err, result){
+            res.json(result)
+        })
+    }
 })
 
 app.get('getArticleInfo', function(req, res){
     var params = req.body;
     var category = params.category;
     var requestUrl;
-    switch(category){
-        case '电脑数码':
-            requestUrl = "http://haitao.smzdm.com/xuan/s0f163t0p1/";
-            break;
-        case '服饰鞋包' :
-            requestUrl = "http://haitao.smzdm.com/xuan/s0f57t0p1/";
-            break;
-        case '运动户外' :
-            requestUrl = "http://haitao.smzdm.com/xuan/s0f191t0p1/";
-            break;
-        case '礼品钟表':
-            requestUrl = "http://haitao.smzdm.com/xuan/s0f131t0p1/";
-            break;
-        case '个护化妆' :
-            requestUrl = "http://haitao.smzdm.com/xuan/s0f113t0p1/";
-            break;
-        case 'http://haitao.smzdm.com/xuan/s0f27t0p1/':
-            requestUrl = "家用电器";
-            break;
-        case '日用百货' :
-            requestUrl = "http://haitao.smzdm.com/xuan/s0f1515t0p1/";
-            break;
-        case '家居家装' :
-            requestUrl = "http://haitao.smzdm.com/xuan/s0f37t0p1/";
-            break;
-        case '图书音像':
-            requestUrl = "http://haitao.smzdm.com/xuan/s0f7t0p1/";
-            break;
-    }
+    requestUrl = judge(null, category);
     spider.getArticleInfo(req, function(err, result){
         if(err){
             return callback(err, null);
