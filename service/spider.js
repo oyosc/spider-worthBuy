@@ -67,7 +67,6 @@ var spider = function(url, category, callback){
                                     return sequelize('category').findOne({
                                         where: {name: category}
                                     }).then(function(cateResult){
-                                        
                                         var now = new Date();
                                         var month = now.getMonth() + 1;
                                         var time = now.getFullYear()+ '-'+month + '-' + now.getDate();
@@ -108,9 +107,9 @@ var spider = function(url, category, callback){
                         },
                         function(err, result){
                             if(err){
-                                return callback(err, null);
+                                return cb(err, null);
                             }
-                            return callback(null, result);
+                            return cb(null, {status: "crawl success"});
                         }
                     );
                 }
@@ -140,7 +139,7 @@ var spider = function(url, category, callback){
                     return callback(err, null);
                 }
                 if(results){
-                    return callback(null, results);
+                    return callback(null, "success");
                 }
             })
             

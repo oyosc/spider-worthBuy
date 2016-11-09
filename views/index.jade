@@ -1,4 +1,20 @@
 html
     head
+        <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     body
         h1 hello #{message}
+        div.input-group.col-lg-6
+            select(style="height:35")
+                option(value="电脑数码") 电脑数码
+                option(value="服饰鞋包") 服饰鞋包
+                option(value="运动户外") 运动户外
+                option(value="礼品钟表") 礼品钟表
+                option(value="个护化妆") 个护化妆
+                option(value="家用电器") 家用电器
+                option(value="日用百货") 日用百货
+                option(value="家居家装") 家居家装
+                option(value="图书音像") 图书音像
+            &nbsp&nbsp&nbsp
+            button.btn.btn-primary 开始获取

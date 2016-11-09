@@ -94,6 +94,10 @@ function judge(url, category){
     
 }
 
+app.get('/', function(req, res){
+    res.render('index', {message: "success"});
+});
+
 app.post('/spiderData', function(req, res){
     var params = req.body;
     var requestUrl = params.url;

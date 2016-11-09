@@ -2,7 +2,6 @@
  * Created by Administrator on 2016/10/29.
  */
 var express = require('./express');
-var autoClimbing = require('./automatic/AutoClimbing');
 var timeTask = require('./timeTask/timeTask');
 var config = {
     database: 'spider',              //MYSQL数据库名

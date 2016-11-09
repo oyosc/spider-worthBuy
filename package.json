@@ -22,12 +22,14 @@
   "dependencies": {
     "async": "^2.1.2",
     "body-parser": "^1.15.2",
+    "bootstrap": "^3.3.7",
     "cheerio": "^0.22.0",
     "express": "^4.14.0",
     "gulp": "^3.9.1",
     "jade": "^1.11.0",
     "mocha": "^3.1.2",
     "mysql": "^2.11.1",
+    "nodemailer": "^2.6.4",
     "pm2": "^2.0.19",
     "request": "^2.76.0",
     "sequelize": "^3.24.6"
