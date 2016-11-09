@@ -5,6 +5,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 var sequelize = require('../mysql_init/init');
 var async = require('async');
+var postEmail = require('../email/postEmail');
 
 var spider = function(url, category, callback){
     function requestUrl(limitUrl){
@@ -154,7 +155,7 @@ var getArticleInfo = function(req, callback){
     var time = params.publichTime;
     sequelize('article').findAll({
             where : {
-                time : time,
+                article_publishTime : {gt: time},
                 name: {"$like": "%"+articleName+"%"}
             },
             include: [
@@ -167,9 +168,7 @@ var getArticleInfo = function(req, callback){
         }
     ).then(function(result){
         if(result && result.length>0){
-            if(result.category && result.category.length>0){
-                return callback(null, result)
-            }
+                return callback(null, result);
         }
         else{
             return callback(null, {status: 'notRecord'});
@@ -178,5 +177,34 @@ var getArticleInfo = function(req, callback){
     
 }
 
+var timePush = function(email, category, articleName, time, callback){
+    if(email&&category&&articleName&&time){
+        getArticleInfo({
+            body:{
+                name: articleName,
+                category: category,
+                publichTime: time
+            }
+        }, function(err, result){
+            console.log(err);
+            console.log(result);
+            if(err){
+                return callback(err, null);
+            }
+            if(result){
+                console.log(result);
+                result = '<b>' + JSON.stringify(result) + '</b>';
+                var subject = 'new article to you';
+                postEmail(email, subject, result);
+                callback(null, 'get your ask, please wait a minute');
+            }
+        })
+    }
+    else{
+        return callback(null, {status: 'noCorrectParams'});
+    }
+}
+
 exports = module.exports = spider;
 exports.getArticleInfo = getArticleInfo;
+exports.timePush = timePush;

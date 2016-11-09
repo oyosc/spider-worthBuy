@@ -113,7 +113,7 @@ app.post('/spiderData', function(req, res){
     }
 })
 
-app.get('getArticleInfo', function(req, res){
+app.get('/getArticleInfo', function(req, res){
     var params = req.body;
     var category = params.category;
     var requestUrl;
@@ -138,5 +138,21 @@ app.get('getArticleInfo', function(req, res){
     })
     
 })
+
+app.post('/timePushing', function(req, res){
+    var params = req.body;
+    var email = params.email;
+    var category = params.category;
+    var time = params.time;
+    var articleName = params.name;
+    spider.timePush(email, category, articleName, time, function(err, result){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.json(result);
+        }
+    })
+});
 
 module.exports = app;
