@@ -189,17 +189,17 @@ var timePush = function(email, category, articleName, time, callback){
                 publichTime: time
             }
         }, function(err, result){
-            console.log(err);
-            console.log(result);
             if(err){
                 return callback(err, null);
             }
             if(result){
-                console.log(result);
                 result = '<b>' + JSON.stringify(result) + '</b>';
                 var subject = 'new article to you';
                 postEmail(email, subject, result);
-                callback(null, 'get your ask, please wait a minute');
+                return callback(null, 'get your ask, please wait a minute, we will send message to your email');
+            }
+            else{
+                return callback(null, {status: 'notRecord'});
             }
         })
     }

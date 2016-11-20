@@ -5,6 +5,8 @@ var express = require('express');
 var app = express();
 var spider = require('./service/spider');
 var bodyParser = require('body-parser');
+var Task = require('./timeTask/timeTask');
+var path = require('path');
 
 
 app.use(bodyParser.json({limit: '5mb'}));
@@ -14,11 +16,12 @@ app.use(bodyParser.urlencoded({
 }))
 
 app.listen('3000', function(){
-    console.log('hello world');
+    console.log('port: 3000');
 });
 
 app.set('view engine', 'jade');
 app.set('views', './views');
+app.use(express.static(path.join(__dirname, 'public')));
 
 function judge(url, category){
     if(url){
@@ -95,7 +98,7 @@ function judge(url, category){
 }
 
 app.get('/', function(req, res){
-    res.render('index', {message: "success"});
+    res.render('index', {message: "this is the spider-worthBuy"});
 });
 
 app.post('/spiderData', function(req, res){
@@ -149,8 +152,24 @@ app.post('/timePushing', function(req, res){
         if(err){
             console.log(err);
         }
+        if(result.status == 'notRecord'){
+            var timerId = Task.timerTask({hour: 8}, function(){
+                spider.timePush(email, category, articleName, time, function(err1, result1){
+                    if(err1){
+                        return callback(err1, null);
+                    }
+                    else if(result1.status == 'notRecord'){
+                        return callback(null, 'also spider data')
+                    }
+                    else{
+                        Task.cancalTask(timerId);
+                        return callback(null, 'the data has sent to your email');
+                    }
+                })
+                })
+        }
         else{
-            res.json(result);
+            return callback(null, result);
         }
     })
 });

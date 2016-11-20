@@ -171,5 +171,15 @@ function timerTask(){
     }
 }
 
-exports = timeTask;
-exports = module.exports = timerTask;
+function cancelTask(timerId){
+    for(var x=0;x<taskArray.length;x++){
+        if(taskArray[x] == timerId){
+            clearTimeout(timerId);
+        }
+    }
+}
+
+exports = module.exports = {
+    timerTask: timerTask,
+    cancalTask: cancelTask
+};
