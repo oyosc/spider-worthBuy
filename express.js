@@ -118,9 +118,11 @@ app.post('/spiderData', function(req, res){
 
 app.post('/getArticleInfo', function(req, res){
     var params = req.body;
+    console.log('11');
     var category = params.category;
     var requestUrl;
     requestUrl = judge(null, category);
+    console.log(category);
     spider.getArticleInfo(req, function(err, result){
         if(err){
             return callback(err, null);
