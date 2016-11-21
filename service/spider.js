@@ -48,7 +48,15 @@ var spider = function(url, category, callback){
                                 article_tag.push($(tag).text().trim());
                             });
                             tag = {article_tag: article_tag};
-                            shop = timeAndShop.match(/\D+$/);
+                            if(timeAndShop.indexOf('6PM')>0){
+                                shop = timeAndShop.match(/(6PM)$/);
+                            }
+                            else if(timeAndShop.indexOf('韩国11街')>0){
+                                shop = timeAndShop.match(/(韩国11街)$/);
+                            }
+                            else{
+                                shop = timeAndShop.match(/\D+$/);
+                            }
                             if(!shop){
                                 return callback1(null, "shop is not exist");
                             }
@@ -156,14 +164,14 @@ var spider = function(url, category, callback){
 
 var getArticleInfo = function(req, callback){
     var params = req.body;
-    var articleName = params.name;
+    var articleName = params.name || null;
     var category = params.category;
-    var time = params.publichTime;
+    var time = params.publichTime || null;
     var where = {};
     if(articleName){
         where["name"] = {"like": "%"+articleName+"%"};
     }
-    if(time){
+    else if(time){
         where["article_publishTime"] = {gt: time};
     }
     
