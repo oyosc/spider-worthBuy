@@ -125,7 +125,7 @@ app.get('/getArticleInfo', function(req, res){
         if(err){
             return callback(err, null);
         }
-        if(result.status = 'notRecord'){
+        if(result.status == 'notRecord'){
             spider(requestUrl, category, function(err1, result1){
                 if(err1){
                     return res.json(err1);
@@ -135,7 +135,7 @@ app.get('/getArticleInfo', function(req, res){
                 }
             })
         }
-        if(result){
+        else {
             res.json(result);
         }
     })
