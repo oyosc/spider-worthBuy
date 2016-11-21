@@ -8,10 +8,12 @@
 $(document).ready(function(){
     $('.btnGet').click(function(){
         var selectValue = $(".divGet").find("select").val();
-        var url = "/getArticleInfo?category="+selectValue;
         $.ajax({
-            url: url,
-            type: "get",
+            url: "/getArticleInfo",
+            type: "post",
+            data: {
+                category: selectValue
+            },
             dataType:'json',
             timeout:5000,
             success: function(datas){

@@ -172,8 +172,7 @@ var getArticleInfo = function(req, callback){
             include: [
                 {
                     model: sequelize('category'),
-                    where: {name: category},
-                    required: false
+                    where: {name: category}
                 }
             ]
         }
