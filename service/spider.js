@@ -156,11 +156,16 @@ var getArticleInfo = function(req, callback){
     var articleName = params.name;
     var category = params.category;
     var time = params.publichTime;
+    var where = {};
+    if(articleName){
+        where["name"] = {"like": "%"+articleName+"%"};
+    }
+    if(time){
+        where["article_publishTime"] = {gt: time};
+    }
+    
     sequelize('article').findAll({
-            where : {
-                article_publishTime : {gt: time},
-                name: {"$like": "%"+articleName+"%"}
-            },
+            where : where,
             include: [
                 {
                     model: sequelize('category'),
@@ -192,10 +197,18 @@ var timePush = function(email, category, articleName, time, callback){
             if(err){
                 return callback(err, null);
             }
-            if(result){
-                result = '<b>' + JSON.stringify(result) + '</b>';
+            if(result.length>0){
+                var sendData = [];
+                // result = '<b>' + JSON.stringify(result) + '</b>';
                 var subject = 'new article to you';
-                postEmail(email, subject, result);
+                for(var i =0; i < result.length; i++){
+                    var text = {};
+                    text["name"] = result[i].dataValues.name;
+                    text["href"] = result[i].dataValues.articleHref;
+                    sendData.push(text);
+                }
+                sendData = JSON.stringify(sendData);
+                postEmail(email, subject, sendData);
                 return callback(null, 'get your ask, please wait a minute, we will send message to your email');
             }
             else{

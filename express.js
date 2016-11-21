@@ -117,7 +117,7 @@ app.post('/spiderData', function(req, res){
 })
 
 app.get('/getArticleInfo', function(req, res){
-    var params = req.body;
+    var params = req.query;
     var category = params.category;
     var requestUrl;
     requestUrl = judge(null, category);
@@ -128,10 +128,10 @@ app.get('/getArticleInfo', function(req, res){
         if(result.status = 'notRecord'){
             spider(requestUrl, category, function(err1, result1){
                 if(err1){
-                    return callback(err1, null);
+                    return res.json(err1);
                 }
                 else{
-                    res.json(result1);
+                    return res.json(result1);
                 }
             })
         }
@@ -156,20 +156,20 @@ app.post('/timePushing', function(req, res){
             var timerId = Task.timerTask({hour: 8}, function(){
                 spider.timePush(email, category, articleName, time, function(err1, result1){
                     if(err1){
-                        return callback(err1, null);
+                        return res.json(err1);
                     }
                     else if(result1.status == 'notRecord'){
-                        return callback(null, 'also spider data')
+                        return res.json({status: 'also spider data'})
                     }
                     else{
                         Task.cancalTask(timerId);
-                        return callback(null, 'the data has sent to your email');
+                        return res.json({status: 'the data has sent to your email'});
                     }
                 })
                 })
         }
         else{
-            return callback(null, result);
+            return res.json({status: result});
         }
     })
 });
