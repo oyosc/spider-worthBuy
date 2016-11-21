@@ -49,6 +49,9 @@ var spider = function(url, category, callback){
                             });
                             tag = {article_tag: article_tag};
                             shop = timeAndShop.match(/\D+$/);
+                            if(!shop){
+                                return callback1(null, "shop is not exist");
+                            }
                             article_publishTime = timeAndShop.substr(0, shop.index);
                             var now = new Date();
                             var year = now.getFullYear();

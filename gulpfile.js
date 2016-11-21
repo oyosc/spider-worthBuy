@@ -5,7 +5,7 @@ var gulp = require('gulp');
 var nodemon = require('nodemon');
 
 gulp.task('init', function(cb){
-    gulp.watch(["express.js", "views/*.jade", "service/*.js", "routes/**"], ["re_start"]);
+    gulp.watch(["express.js", "views/*.jade", "service/*.js", "routes/**"],{readDelay: 30}, ["re_start"]);
     return cb();
 });
 

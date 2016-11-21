@@ -46,7 +46,7 @@ var autoSpider = function(isAuto, callback){
         })
     }
     else{
-        return callback(null, {status: "notCorrect"});
+        return callback(null, {status: "the auto spider is closed"});
     }
 }
 
