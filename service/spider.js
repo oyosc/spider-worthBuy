@@ -72,6 +72,11 @@ var spider = function(url, category, callback){
                                 var month = nowTime.getMonth()+1;
                                 article_publishTime = month + '-' + nowTime.getDate() + ' ' + article_publishTime;
                             }
+                            var timeEx = /^(\d{4}) (\d{2}-(\d){2}) (\d{2}:\d{2})$/
+                            var otherTimeEx = /^(\d{2}-(\d){2}) (\d{4}) (\d{2}:\d{2})$/
+                            if(!timeEx.test(article_publishTime)&&!otherTimeEx.test(article_publishTime)){
+                                return callback1(null, "article_publishTime is not correct");
+                            }
                             sequelize('article').findAll({
                                 where: {name: articleName}
                             }).then(function(result){
