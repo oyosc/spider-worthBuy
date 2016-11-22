@@ -6,8 +6,10 @@ var cheerio = require('cheerio');
 var sequelize = require('../mysql_init/init');
 var async = require('async');
 var postEmail = require('../email/postEmail');
+var fs = require('fs');
 
 var spider = function(url, category, callback){
+    var allResultInfo = [];
     function requestUrl(limitUrl){
         var url = limitUrl;
         return function(cb){
@@ -106,7 +108,10 @@ var spider = function(url, category, callback){
                                         
                                             }).then(function(createResult){
                                                 if(createResult && createResult!==null){
-                                                    return callback1(null, createResult);
+                                                    for(var i =0;i<createResult.length;i++){
+                                                        allResultInfo.push(createResult[i].dataValues);
+                                                    }
+                                                    return callback1(null, allResultInfo);
                                                 }
                                                 else{
                                                     return callback1(null, {status: 'createFailed'});
@@ -129,7 +134,7 @@ var spider = function(url, category, callback){
                             if(err){
                                 return cb(err, null);
                             }
-                            return cb(null, {status: "crawl success"});
+                            return cb(null, {status: "success"});
                         }
                     );
                 }
@@ -158,9 +163,8 @@ var spider = function(url, category, callback){
                 if(err){
                     return callback(err, null);
                 }
-                if(results){
-                    return callback(null, "success");
-                }
+
+                return callback(null, results);
             })
             
         }
@@ -190,8 +194,12 @@ var getArticleInfo = function(req, callback){
             ]
         }
     ).then(function(result){
+        var all = []
         if(result && result.length>0){
-                return callback(null, result);
+            for(var i =0;i<result.length;i++ ){
+                all.push(result[i].dataValues);
+            }
+                return callback(null, all);
         }
         else{
             return callback(null, {status: 'notRecord'});

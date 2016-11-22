@@ -8,6 +8,7 @@
 $(document).ready(function(){
     $('.btnGet').click(function(){
         var selectValue = $(".divGet").find("select").val();
+        var aHref= $('.divEmail').next().attr('href');
         $.ajax({
             url: "/getArticleInfo",
             type: "post",
@@ -17,6 +18,9 @@ $(document).ready(function(){
             dataType:'json',
             timeout:5000,
             success: function(datas){
+                if(aHref){
+                    window.location.reload();
+                }
                 if(datas){
                     for(var i =0;i<datas.length;i++){
                         $('.divEmail').after("<a href='"+ datas[i].articleHref +"'>"+ datas[i].name+"</a></br>");
