@@ -77,8 +77,8 @@ function judge(url, category){
             case '个护化妆' :
                 requestUrl = "http://haitao.smzdm.com/xuan/s0f113t0p1/";
                 break;
-            case 'http://haitao.smzdm.com/xuan/s0f27t0p1/':
-                requestUrl = "家用电器";
+            case '家用电器':
+                requestUrl = "http://haitao.smzdm.com/xuan/s0f27t0p1/";
                 break;
             case '日用百货' :
                 requestUrl = "http://haitao.smzdm.com/xuan/s0f1515t0p1/";
