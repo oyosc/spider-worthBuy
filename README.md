@@ -19,13 +19,13 @@
 ##使用教程
 >1. git clone下，然后命令行输入npm install进行安装
 >2. 安装mysql后，并配置下init.js中的相关参数
->3. 命令行输入gulp,自动构建，如果需要该程序能正常运行，请输入以下mysql语句填充category表
->insert into spider.category values(UUID(), '电脑数码',  '2016-11-21');
->insert into spider.category values(UUID(), '服饰鞋包',  '2016-11-21');
->insert into spider.category values(UUID(), '运动户外',  '2016-11-21');
->insert into spider.category values(UUID(), '礼品钟表',  '2016-11-21');
->insert into spider.category values(UUID(), '个护化妆',  '2016-11-21');
->insert into spider.category values(UUID(), '家用电器',  '2016-11-21');
->insert into spider.category values(UUID(), '日用百货',  '2016-11-21');
->insert into spider.category values(UUID(), '家居家装',  '2016-11-21');
->insert into spider.category values(UUID(), '图书音像',  '2016-11-21');
+>3. 命令行输入gulp,自动构建，如果需要该程序能正常运行，请输入以下mysql语句填充category表</br>
+>insert into spider.category values(UUID(), '电脑数码',  '2016-11-21');</br>
+>insert into spider.category values(UUID(), '服饰鞋包',  '2016-11-21');</br>
+>insert into spider.category values(UUID(), '运动户外',  '2016-11-21');</br>
+>insert into spider.category values(UUID(), '礼品钟表',  '2016-11-21');</br>
+>insert into spider.category values(UUID(), '个护化妆',  '2016-11-21');</br>
+>insert into spider.category values(UUID(), '家用电器',  '2016-11-21');</br>
+>insert into spider.category values(UUID(), '日用百货',  '2016-11-21');</br>
+>insert into spider.category values(UUID(), '家居家装',  '2016-11-21');</br>
+>insert into spider.category values(UUID(), '图书音像',  '2016-11-21');</br>
