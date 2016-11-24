@@ -1,4 +1,4 @@
-# spider-worthBuy
+# spider-worthBuy (https://travis-ci.org/oyosc/spider-worthBuy.svg?branch=master)
 ##基本功能：
 >1. 获取文章信息，如数据库没有会爬取数据再存到数据库中
 >2. 实现邮箱推送，如有数据库记录推送，没有会定时查询数据库，有再进行推送
