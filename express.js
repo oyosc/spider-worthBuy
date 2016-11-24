@@ -117,7 +117,9 @@ app.post('/spiderData', function(req, res){
 })
 
 app.post('/getArticleInfo', function(req, res){
-    console.log('startGET');
+    var now = new Date();
+    var nowTime = now.getFullYear() + "-" +(now.getMonth()+1) + "-" + now.getDate() + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(); 
+    console.log('startGET, time:'+ nowTime);
     var params = req.body;
     var category = params.category;
     var requestUrl;

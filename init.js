@@ -7,7 +7,7 @@ var autoSpider = require('./service/autoSpider.js');
 var config = {
     database: 'spider',              //MYSQL数据库名
     username: "root",                   //MYSQL数据库用户
-    password: "admin",               //MYSQL数据库密码
+    password: "padu@9944",               //MYSQL数据库密码
     options: {
         host : "localhost",              //MYSQL数据库地址
         logging : false,
@@ -29,7 +29,9 @@ var init = function(){
     mysql.init(config);
     timeTask.timerTask({minute: 30}, function(){
         return autoSpider(config.isAuto, function(err, result){
-            console.log('start spider');
+            var now = new Date();
+            var nowTime = now.getFullYear() + "-" +(now.getMonth()+1) + "-" + now.getDate() + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(); 
+            console.log('start spider,spiderTime: '+ nowTime);
             if(err){
                 console.log(err);
             }
