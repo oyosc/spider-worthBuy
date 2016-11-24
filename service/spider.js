@@ -134,7 +134,7 @@ var spider = function(url, category, callback){
                             if(err){
                                 return cb(err, null);
                             }
-                            return cb(null, {status: "success"});
+                            return cb(null, result);
                         }
                     );
                 }

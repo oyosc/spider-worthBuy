@@ -117,6 +117,7 @@ app.post('/spiderData', function(req, res){
 })
 
 app.post('/getArticleInfo', function(req, res){
+    console.log('startGET');
     var params = req.body;
     var category = params.category;
     var requestUrl;
