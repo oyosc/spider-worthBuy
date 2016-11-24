@@ -7,7 +7,7 @@ var autoSpider = require('./service/autoSpider.js');
 var config = {
     database: 'spider',              //MYSQL数据库名
     username: "root",                   //MYSQL数据库用户
-    password: "admin",               //MYSQL数据库密码
+    password: "",               //MYSQL数据库密码
     options: {
         host : "localhost",              //MYSQL数据库地址
         logging : false,

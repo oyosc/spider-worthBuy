@@ -1,5 +1,0 @@
-test:
-  adapter: mysql2
-  database: spider
-  username: root
-  encoding: utf8
