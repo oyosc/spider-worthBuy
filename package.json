@@ -4,7 +4,7 @@
   "description": "one spider about Sea Amoy",
   "main": "index.js",
   "scripts": {
-    "test": "node initStart.js"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
