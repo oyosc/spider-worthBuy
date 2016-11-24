@@ -27,8 +27,9 @@ var config = {
 var init = function(){
     var mysql = require('./mysql_init/init');
     mysql.init(config);
-    timeTask.timerTask({hour: 8}, function(){
+    timeTask.timerTask({minute: 30}, function(){
         return autoSpider(config.isAuto, function(err, result){
+            console.log('start spider');
             if(err){
                 console.log(err);
             }

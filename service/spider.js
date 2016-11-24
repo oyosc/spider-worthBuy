@@ -191,7 +191,8 @@ var getArticleInfo = function(req, callback){
                     model: sequelize('category'),
                     where: {name: category}
                 }
-            ]
+            ],
+            order: [['article_publishTime', 'desc']]
         }
     ).then(function(result){
         var all = []
